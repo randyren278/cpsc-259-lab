@@ -28,15 +28,18 @@ POST:   the elements in array have been reversed in order
 RETURN: N/A
 */
 void reverse_array(int array[], int length) {
-    int reversed[length];
-    int i, j;
+  int reversed_array[length];
+  int i=0,j=(length-1);
 
-    for (i = 0, j = length - 1; i < length; i++, j--) {
-        reversed[i] = array[j];
-    }
-    for (i = 0; i < length; i++) {
-        array[i] = reversed[i];
-    }
+
+  for (i,j;i<length;i++,j--){
+    reversed_array[i]=array[j];
+  }
+
+  for(i=0;i<length;i++){
+    array[i]=reversed_array[i];
+  }
+
 
   // Implement this function here
 }
@@ -55,11 +58,12 @@ int length(const char string[])
 
   int count=0;
 
-  for (int i=0; string[i] !='\0';i++){
+  for (int i=0;string[i]!='\0';i++){
     count+=1;
   }
 
-  return count;
+  return count; 
+
 
 
 
@@ -79,16 +83,18 @@ RETURN: number of occurences of letter_sought in string
 */
 int count_letters(const char string[], char letter)
 {
-  // Replace this return statement with your own implementation
   int count=0;
 
-  for (int i=0;string[i] != '\0';i++){
+  for (int i=0;string[i]!='\0';i++){
     if (string[i]==letter){
       count+=1;
     }
   }
 
   return count;
+
+  // Replace this return statement with your own implementation
+
 }
 
 /*
@@ -109,25 +115,38 @@ ELSE IF string is not a palindrome THEN 0
 */
 int is_palindrome(const char string[]) 
 {
-    int i = 0;
-    int j = length(string) - 1;
+  int i =0;
+  int j= length(string)-1;
 
-    while (i < j) {
-        // Skip spaces on the left side
-        while (i < j && (string[i] == ' ')) {
-            i++;
-        }
-        // Skip spaces on the right side
-        while (i < j && (string[j] == ' ')) {
-            j--;
-        }
-        // Compare characters (case-sensitive)
-        if (string[i] != string[j]) {
-            return 0;  // Not a palindrome
-        }
-        i++;
-        j--;
+  while (i<j){
+
+    if (string[i]==' '){
+      i+=1;
+      continue;
     }
 
-    return 1;  // It's a palindrome
-}
+    if (string[j]==' '){
+      j-=1;
+      continue; 
+    }
+
+    if (string[i]!=string[j]){
+      return 0;
+    }
+    i++;
+    j--;
+    }
+
+    return 1; 
+
+  }
+
+
+  
+
+
+
+
+
+
+
