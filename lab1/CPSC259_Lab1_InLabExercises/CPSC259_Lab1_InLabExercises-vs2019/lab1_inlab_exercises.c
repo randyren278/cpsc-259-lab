@@ -127,7 +127,7 @@ int is_palindrome(const char string[])
 
     if (string[j]==' '){
       j-=1;
-      continue; 
+      continue;
     }
 
     if (string[i]!=string[j]){
