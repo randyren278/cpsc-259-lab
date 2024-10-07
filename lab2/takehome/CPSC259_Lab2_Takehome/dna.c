@@ -6,10 +6,10 @@
               specified sample.  The formatted DNA
               sequence file is a txt file (threes samples
               are provided in the Resource Files folder).
- Author:			Your names
- Student #s:	12345678 and 12345678
- CWLs:	      cwl1 and cwl2
- Date:				Add the date here
+ Author:			Randy Ren
+ Student #s:	56695331
+ CWLs:	      rren05
+ Date:				October 6th, 2024
  */
 
  /******************************************************************
