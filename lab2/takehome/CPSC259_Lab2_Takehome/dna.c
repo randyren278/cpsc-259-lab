@@ -241,47 +241,59 @@ int extract_dna(FILE* file_pointer, char** sample_segment, char*** candidate_seg
  * POST:      NULL
  * RETURN:    VOID
  */
-void analyze_segments(char* sample_segment, char** candidate_segments, int number_of_candidates, char* output_string)
-{
-  /* Some helpful variables you might want to use */
-  int* scores = NULL;
-  int sample_length = 0;
-  int candidate_length = 0;
-  int i = 0;
-  int has_perfect_match = 0;
-  int score = 0;
-  char outputline_buffer[BUFSIZE] = "\0";
-  char int_buffer[BUFSIZE];
+void analyze_segments(char* sample_segment, char** candidate_segments, int number_of_candidates, char* output_string) {
+    int i, score, best_score = 0;
+    int perfect_match_found = 0;
+    char outputline_buffer[BUFSIZE] = "\0";
+    char int_buffer[BUFSIZE];
 
-  /* Hint: Check to see if any candidate segment(s) are a perfect match, and report them
-     (REMEMBER: don't ignore trailing nucleotides when searching for a perfect score)
-     Report the result by concatenating to output_string using the strcat(...) function.
-     See the comments above this function for the output string format for each line
-     Use sprintf(char * str, const char * format, ...) to convert an integer into string
-     which can then be concatenated using strcat(...) 
-     e.g. sprintf(int_buffer, "%d", i);
-          strcat(outputline_buffer, "Candidate number ");
-          strcat(outputline_buffer, int_buffer);
-          strcat(outputline_buffer, " is a perfect match\n");*/
+    // Loop through all candidates and check for perfect matches
+    for (i = 0; i < number_of_candidates; ++i) {
+        if (strcmp(sample_segment, candidate_segments[i]) == 0) {
+            // Perfect match found
+            sprintf(int_buffer, "%d", i + 1); // candidate numbers start from 1
+            strcat(outputline_buffer, "Candidate number ");
+            strcat(outputline_buffer, int_buffer);
+            strcat(outputline_buffer, " is a perfect match\n");
+            strcat(output_string, outputline_buffer);
+            perfect_match_found = 1;
+        }
+    }
 
-  // Insert your code here
+    // If perfect match(es) found, return early
+    if (perfect_match_found) {
+        return;
+    }
 
-  /* Hint: Return early if we have found and reported perfect match(es) */
-
-  // Insert your code here
-
-  /* Hint: Otherwise we need to calculate and print all of the scores by invoking
-     calculate_score for each candidate_segment. Write an output line for each
-     candidate_segment and concatenate your line to output_string.
-     Don't forget to clear your outputline_buffer for each new line*/
-  for (i = 0; i < number_of_candidates; ++i) {
-
-    // Insert your code here - maybe a call to calculate_score?
-  }
-
-  /* End of function */
-  return;
+    // No perfect matches, calculate scores for all candidates
+    for (i = 0; i < number_of_candidates; ++i) {
+        score = calculate_score(sample_segment, candidate_segments[i]);
+        if (score > best_score) {
+            best_score = score;  // Update best score
+            strcpy(outputline_buffer, "");  // Clear buffer
+            sprintf(int_buffer, "%d", i + 1);
+            strcat(outputline_buffer, "Candidate number ");
+            strcat(outputline_buffer, int_buffer);
+            strcat(outputline_buffer, " matched with a best score of ");
+            sprintf(int_buffer, "%d", score);
+            strcat(outputline_buffer, int_buffer);
+            strcat(outputline_buffer, "\n");
+            strcat(output_string, outputline_buffer);
+        } else if (score == best_score) {
+            // Candidate matches the best score
+            strcpy(outputline_buffer, "");  // Clear buffer
+            sprintf(int_buffer, "%d", i + 1);
+            strcat(outputline_buffer, "Candidate number ");
+            strcat(outputline_buffer, int_buffer);
+            strcat(outputline_buffer, " matched with a best score of ");
+            sprintf(int_buffer, "%d", score);
+            strcat(outputline_buffer, int_buffer);
+            strcat(outputline_buffer, "\n");
+            strcat(output_string, outputline_buffer);
+        }
+    }
 }
+
 
 /*
  * Compares the sample segment and the candidate segment and calculates a
@@ -312,16 +324,49 @@ void analyze_segments(char* sample_segment, char** candidate_segments, int numbe
  * POST:      NULL
  * RETURN:    An int score representing to degree to which the two segments match.
  */
-int calculate_score(char* sample_segment, char* candidate_segment)
-{
-  /* Some helpful variables you might (or might not) want to use */
-  int temp_score = 0;
-  int score = 0;
-  int iterations = 0;
-  int sample_length = strlen(sample_segment);
-  int candidate_length = strlen(candidate_segment);
-  int sample_length_in_codons = sample_length / 3;
+int calculate_score(char* sample_segment, char* candidate_segment) {
+    int score = 0, temp_score = 0;
+    int sample_length = strlen(sample_segment);
+    int candidate_length = strlen(candidate_segment);
+    int sample_codons = sample_length / 3;
+    int i, j, k;
 
-  // Insert your code here (replace this return statement with your own code)
-  return 0;
+    // Loop through candidate segment, sliding the sample over it
+    for (i = 0; i <= candidate_length - sample_length; i += 3) {
+        temp_score = 0;
+
+        // Compare codon by codon
+        for (j = 0; j < sample_codons; ++j) {
+            char sample_codon[4], candidate_codon[4];
+            strncpy(sample_codon, &sample_segment[j * 3], 3);
+            strncpy(candidate_codon, &candidate_segment[i + j * 3], 3);
+            sample_codon[3] = candidate_codon[3] = '\0';
+
+            if (strcmp(sample_codon, candidate_codon) == 0) {
+                temp_score += 10;  // Exact match
+            } else {
+                int sample_index = get_codon_index(sample_codon);
+                int candidate_index = get_codon_index(candidate_codon);
+                if (sample_index != -1 && sample_index == candidate_index) {
+                    temp_score += 5;  // Same amino acid
+                } else {
+                    // Check nucleotide by nucleotide
+                    for (k = 0; k < 3; ++k) {
+                        if (sample_codon[k] == candidate_codon[k]) {
+                            temp_score += 2;  // Matching nucleotide
+                        } else if (is_base_pair(sample_codon[k], candidate_codon[k])) {
+                            temp_score += 1;  // Matching base pair
+                        }
+                    }
+                }
+            }
+        }
+
+        // Update score if this shift gives a better result
+        if (temp_score > score) {
+            score = temp_score;
+        }
+    }
+
+    return score;
 }
