@@ -1,38 +1,38 @@
 /*
  File:         linkedlist.h
  Purpose:      Prototypes for a linked list implementation
- Author:       Your names
- Student #s:   12345678 and 12345678
- CWLs:         cwl1 and cwl2
- Date:         Add the date here
+ Author:       Randy Ren
+ Student #s:   56695331
+ CWLs:         rren05
+ Date:         Saturday October 12th, 2024
  */
 
 #pragma once
 
- /******************************************************************
-	PLEASE EDIT THIS FILE
-
-	Comments that start with // should be replaced with code
-	Comments that are surrounded by * are hints
-	******************************************************************/
-
-	/* Insert your airplane structure here.  Use the correct types and names for the elements! */
+/* Define the airplane structure */
 typedef struct airplane {
-	// Add your member elements here
+    int flight_number;            // Flight number (integer)
+    char* city_origin;            // Pointer to a string for the origin city
+    char* city_destination;       // Pointer to a string for the destination city
+    int priority;                 // Priority level (integer)
+    int maximum_speed_kph;        // Maximum speed in kph (integer)
+    int cruising_altitude;        // Cruising altitude (integer)
+    int capacity;                 // Capacity of the airplane (integer)
 } airplane;
 
-/* Insert your node structure here.  Use the correct types and names for the elements! */
+/* Define the node structure for the linked list */
 typedef struct node {
-	// Add your member elements here
+    airplane plane;               // The airplane data stored in the node
+    struct node* next;            // Pointer to the next node in the list
 } node;
 
-/* Prototypes for in-lab functions (do not add anything here) */
+/* Prototypes for in-lab functions */
 node* create_linked_list();
 node* create_node(airplane plane);
 node* prepend_node(node* list, node* new_node);
 node* delete_node(node* list);
 
-/* Prototypes for take-home functions (do not add anything here) */
+/* Prototypes for take-home functions */
 int get_length(node* list);
 node* delete_list(node* list);
 void print_node(node* node_to_print);

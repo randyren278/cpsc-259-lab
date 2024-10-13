@@ -10,7 +10,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
- /* Preprocessor directives */
+/* Preprocessor directives */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,224 +18,182 @@
 
 /******************************************************************
  PLEASE EDIT THIS FILE
-
  Comments that start with // should be replaced with code
  Comments that are surrounded by * are hints
  ******************************************************************/
 
- /*
-  Returns a pointer to a new, empty linked list of struct node.
-  PRE:       NULL (no pre-conditions)
-  POST:      NULL (no side-effects)
-  RETURN:    A pointer to a new, empty linked list of struct node (NULL)
-  */
-node* create_linked_list()
-{
-  // Insert your code here
-
+/* Create an empty linked list */
+node* create_linked_list() {
+    return NULL;  // Empty list is represented by NULL
 }
 
-/*
- Returns a dynamically allocated struct node that contains the specified
- struct airplane. Note that the string attributes of the newly created
- node's struct airplane must be specially copied (refer to lab 2).
- The node's next pointer doesn't point to anything
- PARAM:     plane, a struct airplane
- PRE:       NULL (no pre-conditions)
- POST:      NULL (no side-effects)
- RETURN:    A pointer to a dynamically allocated struct node a) that contains
-            the specified struct airplane, and b) whose next pointer points to NULL
- */
-node* create_node(airplane plane)
-{
-  // Insert your code here
+/* Create a new node */
+node* create_node(airplane plane) {
+    node* new_node = (node*)malloc(sizeof(node));
+    if (new_node == NULL) {
+        return NULL;  // Memory allocation failed
+    }
 
-  // replace this line with something appropriate
-  return NULL;
+    // Copy airplane data into the new node
+    new_node->plane.flight_number = plane.flight_number;
+    new_node->plane.priority = plane.priority;
+    new_node->plane.maximum_speed_kph = plane.maximum_speed_kph;
+    new_node->plane.cruising_altitude = plane.cruising_altitude;
+    new_node->plane.capacity = plane.capacity;
+
+    // Copy string attributes
+    new_node->plane.city_origin = strdup(plane.city_origin);
+    new_node->plane.city_destination = strdup(plane.city_destination);
+
+    new_node->next = NULL;    // Set next pointer to NULL
+    return new_node;
 }
 
-/*
- Prepends a struct node passed as a parameter to the list passed as a
- parameter, and returns a pointer to the result.
- PARAM:     list is a pointer to a (possibly empty) linked list of struct node
- PARAM:     new_node is a pointer to a struct node
- PRE:       new_mode is not null
- POST:      The specified struct node is added to the beginning of the list
-            and its next pointer points to the node that used to be first
- RETURN:    A pointer to a linked list which contains all of the nodes
-            of the list passed as a parameter, plus a prepended node
- */
-node* prepend_node(node* list, node* new_node)
-{
-  // Insert your code here
-
-  // replace this line with something appropriate
-  return NULL;
+/* Prepend a node to the linked list */
+node* prepend_node(node* list, node* new_node) {
+    new_node->next = list;  // New node points to the current head
+    return new_node;        // Return the new node as the new head
 }
 
-/*
- Deletes the first struct node in the specified list, and returns a pointer to
- the shortened list. Be aware of nested allocations!
- PARAM:     list is a pointer to a (possibly empty) linked list of struct node
- PRE:       NULL
- POST:      The list passed as a parameter has one fewer node, and the dynamically
-            allocated memory which contained that removed node has been freed
- RETURN:    IF the list is empty
-            THEN NULL
-            ELSE a pointer to the shortened list
- */
-node* delete_node(node* list)
-{
-  // Insert your code here
-
-  // replace this line with something appropriate
-  return NULL;
+/* Delete the first node in the linked list */
+node* delete_node(node* list) {
+    if (list == NULL) {
+        return NULL;  // If the list is empty, nothing to delete
+    }
+    node* temp = list;  // Store the current head
+    list = list->next;  // Move the head to the next node
+    free(temp->plane.city_origin); // Free the dynamically allocated strings
+    free(temp->plane.city_destination);
+    free(temp);         // Free memory of the removed node
+    return list;        // Return the updated list
 }
 
-/*
- Returns the number of nodes in the specified linked list of struct node.
- PARAM:     list is a pointer to a (possibly empty) linked list of struct node
- PRE:       NULL (no pre-conditions)
- POST:      NULL (no side-effects)
- RETURN:    The length of the specified list, an int
- */
-int get_length(node* list)
-{
-  // Insert your code here
-
-  // replace this line with something appropriate
-  return -1;
+/* Get the length of the linked list */
+int get_length(node* list) {
+    int count = 0;
+    node* current = list;
+    while (current != NULL) {
+        count++;
+        current = current->next;
+    }
+    return count;
 }
 
-/*
- Deletes an entire list.  This function iterates along a list and deallocates the
- memory containing each struct node.
- PARAM:     list is a pointer to a (possibly empty) linked list of struct node
- PRE:       NULL (no pre-conditions)
- POST:      The memory containing all of the nodes in the list has been freed
- RETURN:    an empty list (NULL)
- */
-node* delete_list(node* list)
-{
-  // Insert your code here
-
-  // replace this line with something appropriate
-  return list;
+/* Delete the entire linked list */
+node* delete_list(node* list) {
+    node* current = list;
+    while (current != NULL) {
+        node* next = current->next;  // Store the next node
+        free(current->plane.city_origin); // Free the dynamically allocated strings
+        free(current->plane.city_destination);
+        free(current);               // Free the current node
+        current = next;              // Move to the next node
+    }
+    return NULL;  // Return NULL as the list is now empty
 }
 
-/*
- Prints the data stored in a node.  For the struct airplane in the node,
- prints the fields on separate lines.  For each field, prints the field name
- and the field value.  For the pointer, prints "Link = NULL\n" if the pointer points
- to null, else prints "Link points to address xxx\n", where xxx is the pointer address
- in hexademical.
- If node_to_print is NULL, prints "The node is empty\n".
- PARAM:     node_to_print is a pointer to a (possibly null) struct node
- PRE:       NULL (no pre-conditions)
- POST:      Information about node_to_print has been printed to standard output
- RETURN:    NULL
- */
-void print_node(node* node_to_print)
-{
-  // Insert your code here
-
+/* Print the information of a single node */
+void print_node(node* node_to_print) {
+    if (node_to_print == NULL) {
+        printf("The node is empty\n");
+        return;
+    }
+    printf("Flight Number: %d\n", node_to_print->plane.flight_number);
+    printf("Origin: %s\n", node_to_print->plane.city_origin);
+    printf("Destination: %s\n", node_to_print->plane.city_destination);
+    printf("Priority: %d\n", node_to_print->plane.priority);
+    printf("Max Speed: %d kph\n", node_to_print->plane.maximum_speed_kph);
+    printf("Altitude: %d meters\n", node_to_print->plane.cruising_altitude);
+    printf("Capacity: %d passengers\n", node_to_print->plane.capacity);
 }
 
-/*
- Prints the data stored in all nodes in the specified list to print.
- For each node, prints the data inside the node the same way that it
- is printed by print_node.  If the list is empty, a suitable message
- is printed to standard output.
- PARAM:     node_to_print is a pointer to a (possibly empty) linked list of
-            struct node
- PRE:       NULL (no pre-conditions)
- POST:      Information about list_to_print has been printed to standard output
- RETURN:    NULL
- */
-void print_list(node* list_to_print)
-{
-  // Insert your code here
-
+/* Print the entire linked list */
+void print_list(node* list_to_print) {
+    if (list_to_print == NULL) {
+        printf("The list is empty\n");
+        return;
+    }
+    node* current = list_to_print;
+    while (current != NULL) {
+        print_node(current);
+        current = current->next;  // Move to the next node
+    }
 }
 
-/*
- Reverses a list.
- PARAM:     list is a pointer to a (possibly empty) linked list of struct node
- PRE:       NULL (no pre-conditions)
- POST:      The order of the nodes in the list passed as a parameter has been
-            reversed
- RETURN:    a list of struct node that is the reverse of the list passed as a
-            parameter
- */
-node* reverse(node* list)
-{
-  // Insert your code here
-
-  // replace this line with something appropriate
-  return NULL;
+/* Reverse the order of the linked list */
+node* reverse(node* list) {
+    node* prev = NULL;
+    node* current = list;
+    node* next = NULL;
+    while (current != NULL) {
+        next = current->next;  // Store the next node
+        current->next = prev;  // Reverse the pointer
+        prev = current;        // Move prev and current one step forward
+        current = next;
+    }
+    return prev;  // Return the new head of the reversed list
 }
 
-/*
- Removes every node from the list which contains an airplane destined for
- the city name passed in the second parameter.
- PARAM:     list is a pointer to a (possibly empty) linked list of struct node
- PARAM:     destination_city is a pointer to a null-terminated array of char
- PRE:       NULL (no pre-conditions)
- POST:      Any struct node in the list which contains an airplane struct
-            destined for the destination_city is removed from the list, and
-            the memory deallocated
- RETURN:    a list of struct node that does not contain any struct node that
-            has an airplane destined for the destination_city
- */
-node* remove_from_list(node* list, char* destination_city)
-{
-  // Insert your code here
+/* Remove all nodes with a matching destination city */
+node* remove_from_list(node* list, char* destination_city) {
+    node* current = list;
+    node* prev = NULL;
 
-  // replace this line with something appropriate
-  return NULL;
+    while (current != NULL) {
+        // If the current node's destination matches the target city
+        if (strcmp(current->plane.city_destination, destination_city) == 0) {
+            // If we are removing the head of the list
+            if (prev == NULL) {
+                list = current->next;  // Move the head to the next node
+            } else {
+                prev->next = current->next;  // Link previous node to next node
+            }
+
+            // Save the next node before freeing current
+            node* temp = current;
+            current = current->next;  // Move to the next node before freeing
+
+            // Free the memory associated with the removed node
+            free(temp->plane.city_origin);
+            free(temp->plane.city_destination);
+            free(temp);
+        } else {
+            // Move previous and current pointers forward if no removal occurs
+            prev = current;
+            current = current->next;
+        }
+    }
+    return list;
 }
 
-/*
- Returns a reference to the nth node (but does not remove it ) in the
- specified list.  If the list is too short, returns NULL.
- PARAM:     list is a pointer to a (possibly empty) linked list of struct node
- PARAM:     ordinality is an integer
- PRE:       ordinality > 0
- POST:      NULL (no side-effects)
- RETURN:    IF ordinality <= length of list
-            THEN a pointer to the nth node
-            ELSE NULL
- */
-node* retrieve_nth(node* list, int ordinality)
-{
-  // Insert your code here
-
-  // replace this line with something appropriate
-  return NULL;
+/* Retrieve the nth node from the linked list */
+node* retrieve_nth(node* list, int ordinality) {
+    int count = 1;
+    node* current = list;
+    while (current != NULL && count < ordinality) {
+        current = current->next;
+        count++;
+    }
+    return (count == ordinality) ? current : NULL;
 }
 
-/*
- Inserts the specified node into the specified list of nodes at the specified
- ordinality.  For example, if ordinality = 1, this is a simple prepend_node
- operation.  If ordinality = 3, then when this function is finished, the third
- node in the list will be the node_to_insert.  If the ordinality = the length
- of the list + 1, then the node_to_insert is appended to the end of the list.
- If the ordinality > 1 + length of the list, the function returns a pointer
- to the unchanged list.
- PARAM:     list is a pointer to a (possibly empty) linked list of struct node
- PARAM:     ordinality is an integer
- PRE:       ordinality > 0
- PRE:       node_to_insert is NEVER a null (it is always a correct node pointer)
- POST:      NULL (no side-effects)
- RETURN:    IF ordinality <= length of list + 1
-            THEN a pointer to the list which contains the node_to_insert in the
-      correct location
-            ELSE a pointer to the unchanged list
- */
-node* insert_nth(node* list, node* node_to_insert, int ordinality)
-{
-  // Insert your code here
+/* Insert a node at a specific position in the linked list */
+node* insert_nth(node* list, node* node_to_insert, int ordinality) {
+    if (ordinality == 1) {
+        return prepend_node(list, node_to_insert);
+    }
 
-  // replace this line with something appropriate
-  return NULL;
+    int count = 1;
+    node* current = list;
+    while (current != NULL && count < ordinality - 1) {
+        current = current->next;
+        count++;
+    }
+
+    if (current != NULL) {
+        node_to_insert->next = current->next;
+        current->next = node_to_insert;
+    }
+
+    return list;
 }
