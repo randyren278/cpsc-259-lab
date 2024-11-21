@@ -1,10 +1,10 @@
 /*
  File:          mazesolver.c
  Purpose:       Add a brief description
- Author:			  Your names
- Student #s:		12345678 and 12345678
- CWLs:      		cwl1 and cwl2
- Date:				  Add the date here
+ Author:			  Randy Ren 
+ Student #s:		56695331
+ CWLs:      		rren05
+ Date:				  November 21, 2024
  */
 
  
