@@ -1,10 +1,10 @@
 /*
  File:          mazesolver.h
  Purpose:       Contains constants, prototypes, globals
- Author:			  Your names
- Student #s:		12345678 and 12345678
- CWLs:      		cwl1 and cwl2
- Date:				  Add the date here
+ Author:			  Randy Ren 
+ Student #s:		56695331
+ CWLs:      		rren05
+ Date:				  November 21, 2024
  */
 
 /******************************************************************
@@ -50,4 +50,4 @@ void         generate_all_paths    ( char*** pathsetref, int* numpathsref, maze_
 int          path_cost             ( char* path_string );
 void	       construct_shortest_path_info ( char** pathset, int numpaths, char* outputbuffer );
 void		     construct_cheapest_path_info ( char** pathset, int numpaths, char* outputbuffer );
-void         process               ( );
+void         process               ( ); 
